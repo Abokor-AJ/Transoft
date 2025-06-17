@@ -1,0 +1,62 @@
+{% extends 'end_customers/portal_base.html' %}
+
+{% block title %}{{ company.name }} - {{ customer.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>{{ company.name }}</h2>
+            <div class="btn-group">
+                {% for comp in all_companies %}
+                    <a href="{% url 'customer_portal:freight_company_view' customer.id comp.id %}" 
+                       class="btn {% if comp.id == company.id %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                        {{ comp.name }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Company Information</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Details</h4>
+                        <dl class="row">
+                            <dt class="col-sm-4">Name</dt>
+                            <dd class="col-sm-8">{{ company.name }}</dd>
+                            
+                            <dt class="col-sm-4">SaaS Provider</dt>
+                            <dd class="col-sm-8">{{ company.saas_provider.name }}</dd>
+                            
+                            <dt class="col-sm-4">Provider Email</dt>
+                            <dd class="col-sm-8">{{ company.saas_provider.contact_email }}</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Quick Actions</h4>
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action">
+                                View Shipping History
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                Create New Shipment
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                View Documents
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

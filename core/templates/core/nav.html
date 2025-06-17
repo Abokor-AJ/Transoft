@@ -1,0 +1,138 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'dashboard' %}">Freight SaaS</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            {% if user.is_authenticated %}
+                <ul class="navbar-nav me-auto">
+                    {% if user.profile.user_type == 'SAAS_PROVIDER' %}
+                        <!-- SaaS Provider Navigation -->
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'freight_companies' %}active{% endif %}" 
+                               href="{% url 'freight_companies' %}">
+                                Freight Companies
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'system_settings' %}active{% endif %}" 
+                               href="{% url 'system_settings' %}">
+                                System Settings
+                            </a>
+                        </li>
+
+                    {% elif user.profile.user_type == 'FREIGHT_ADMIN' %}
+                        <!-- Freight Company Admin Navigation -->
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'my_customers' %}active{% endif %}" 
+                               href="{% url 'my_customers' %}">
+                                My Customers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'shipments' %}active{% endif %}" 
+                               href="{% url 'shipments' %}">
+                                Shipments
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'documents' %}active{% endif %}" 
+                               href="{% url 'documents' %}">
+                                Documents
+                            </a>
+                        </li>
+
+                    {% elif user.profile.user_type == 'END_CUSTOMER_ADMIN' %}
+                        <!-- End Customer Admin Navigation -->
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'my_freight_providers' %}active{% endif %}" 
+                               href="{% url 'my_freight_providers' %}">
+                                My Freight Providers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'my_shipments' %}active{% endif %}" 
+                               href="{% url 'my_shipments' %}">
+                                My Shipments
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+                <!-- Provider Switch Dropdown for End Customers -->
+                {% if user.profile.user_type == 'END_CUSTOMER_ADMIN' %}
+                    <div class="nav-item dropdown me-3">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="providerDropdown" 
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            {% if request.session.selected_provider %}
+                                {{ request.session.selected_provider.name }}
+                            {% else %}
+                                Select Provider
+                            {% endif %}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="providerDropdown">
+                            {% for provider in user.profile.linked_customer.freight_companies.all %}
+                                <li>
+                                    <form method="post" action="{% url 'switch_provider' %}" class="dropdown-item-form">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="provider_id" value="{{ provider.id }}">
+                                        <button type="submit" class="dropdown-item {% if request.session.selected_provider.id == provider.id %}active{% endif %}">
+                                            {{ provider.name }}
+                                        </button>
+                                    </form>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <!-- User Menu -->
+                <div class="nav-item dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" 
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ user.username }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                </div>
+            {% else %}
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<style>
+.dropdown-item-form {
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-item-form button {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+}
+
+.dropdown-item-form button:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-item-form button.active {
+    background-color: #0d6efd;
+    color: white;
+}
+</style> 

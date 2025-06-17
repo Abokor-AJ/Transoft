@@ -1,0 +1,60 @@
+{% extends 'end_customers/portal_base.html' %}
+
+{% block title %}{{ customer.name }} - Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <h2>Customer Dashboard</h2>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Connected Freight Companies</h5>
+                        <p class="card-text display-4">{{ total_companies }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Staff Members</h5>
+                        <p class="card-text display-4">{{ total_staff }}</p>
+                        <a href="{% url 'customer_portal:manage_staff' customer.id %}" class="btn btn-success">Manage Staff</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Freight Companies</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for company in freight_companies %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ company.name }}</h5>
+                                <p class="card-text">SaaS Provider: {{ company.saas_provider.name }}</p>
+                                <a href="{% url 'customer_portal:freight_company_view' customer.id company.id %}" 
+                                   class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12">
+                        <p>No freight companies connected yet.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

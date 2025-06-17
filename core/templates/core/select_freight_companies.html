@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Select Freight Companies{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Select Freight Companies</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Available Freight Companies</label>
+                            {{ form.freight_companies.errors }}
+                            <div class="list-group">
+                                {% for company in form.freight_companies %}
+                                <div class="list-group-item">
+                                    <div class="form-check">
+                                        {{ company.tag }}
+                                        <label class="form-check-label" for="{{ company.id_for_label }}">
+                                            {{ company.choice_label }}
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Selection</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

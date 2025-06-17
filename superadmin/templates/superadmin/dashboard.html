@@ -1,0 +1,58 @@
+{% extends 'superadmin/base.html' %}
+
+{% block title %}Dashboard - Freight SaaS Admin{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <h2>Dashboard Overview</h2>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Freight Companies</h5>
+                        <p class="card-text display-4">{{ total_companies }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total End Customers</h5>
+                        <p class="card-text display-4">{{ total_customers }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Company Hierarchy</h3>
+        <div class="card mt-4">
+            <div class="card-body">
+                <div class="hierarchy">
+                    {% for company in freight_companies %}
+                    <div class="company-section mb-4">
+                        <h4>{{ company.name }}</h4>
+                        <div class="ms-4">
+                            <h5>End Customers:</h5>
+                            <ul>
+                                {% for customer in company.end_customers.all %}
+                                <li>{{ customer.name }}</li>
+                                {% empty %}
+                                <li>No end customers</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p>No freight companies registered yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
